@@ -1,6 +1,5 @@
 REPEAT_LIMIT <<- 10001
 RELATIVE_DIFF <<- 0.0000001
-Method_H0 <<- 1
 
 library(Rcpp)
 library(RcppArmadillo)
@@ -262,7 +261,7 @@ BM.StepE <- function(data, mu, r, p, q, K, L, n, m)
 			Omega.jl = Omega.jl, Omega.ijkl = Omega.ijkl, LogLikelihood = LogLikelihood))
 }
 
-BM.StepM <- function(data, Psi.ik, Psi.ijkl, Omega.jl, Omega.ijkl, mu, r, K, L, n, m, method)
+BM.StepM <- function(data, Psi.ik, Psi.ijkl, Omega.jl, Omega.ijkl, mu, r, K, L, n, m)
 {
 	PsiPsi <- MyOuterPsiPsi(Psi.ik, Psi.ijkl)
 	PsiPsi <- array(PsiPsi, dim = c(n, m, K, L))
@@ -337,13 +336,13 @@ BM.InitTheta <- function(data, K, L)
 	return(list(mu=mu, r = r, p=p, q=q, row.class=res1$cluster, col.class=res2$cluster) )
 }
 
-BM.RunEM <- function(data, K, L, method=Method_H0)
+BM.RunEM <- function(data, K, L)
 {
 	n <- dim(data)[1]
 	m <- dim(data)[2]
 
-	#theta <- BM.InitTheta(data, K, L)
-	theta <- result0
+	theta <- BM.InitTheta(data, K, L)
+	#theta <- result0
 	mu <- theta$mu
 	r <- theta$r
 	p <- theta$p
@@ -387,7 +386,7 @@ BM.RunEM <- function(data, K, L, method=Method_H0)
 		}
 		oldtheta <- theta
 
-		theta <- BM.StepM(data, Psi.ik, Psi.ijkl, Omega.jl, Omega.ijkl, mu, r, K, L, n, m, method)
+		theta <- BM.StepM(data, Psi.ik, Psi.ijkl, Omega.jl, Omega.ijkl, mu, r, K, L, n, m)
 		mu <- theta$mu
 		r <- theta$r
 		p <- theta$p
@@ -640,18 +639,6 @@ BM.BIC <- function(data, K, L, rep=30)
 	cat("\n")
 	return(list(H = H, J = J, Hsimu=H.simu, Jsimu=J.simu, BIC = BIC , est = emResult))
 }
-
-PlotBIC <- function(BIC, startN=2)
-{
-	par(mar=(c(4,4,2,2)+.1),cex=1.3)
-	Nk <- length(BIC)
-	plot(startN :  Nk, BIC[startN:Nk] / 1e+4 , type="b",pch = 5 , col= "blue",
-		lty = "solid",main="",xlab = "# of cluster", ylab = "BIC", cex=0.9)
-
-	mtext(expression("x"*10^4),line = 0.3,adj = 0,cex=1.2)
-	
-}
-
 
 BM.SimuData.alt <- function(n, m, mu, r, p, q)
 {
