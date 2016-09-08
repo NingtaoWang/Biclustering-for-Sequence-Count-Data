@@ -1,6 +1,6 @@
 ## A Statistical Biclustering Method for Sequence Count Data
 
-# Example
+Here is an simple example
     source("BlockMixtureModel_NegativeBinomial_Rcpp.R")
     mu <- array(1:9, dim = c(3, 3))
     r <- 1
