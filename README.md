@@ -3,7 +3,7 @@
 Here is an simple example.
     
     #The function BM.RunEM biclusters the data. 
-    #Input:
+    #Inputs of BM.RunEM
     #data: a matrix of sequence counts
     #K: number of row clusters
     #L: number of column clusters
