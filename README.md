@@ -1,6 +1,6 @@
 ## A Statistical Biclustering Method for Sequence Count Data
 
-Here is an simple example
+The function BM.RunEM biclusters the data. Here is an simple example.
 
     source("BlockMixtureModel_NegativeBinomial_Rcpp.R")
     mu <- array(1:9, dim = c(3, 3))
